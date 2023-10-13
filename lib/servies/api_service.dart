@@ -12,9 +12,7 @@ Future getCurrentWeather({
 
   final result = await http.get(Uri.parse(link));
   if (result.statusCode == 200) {
-    print(result.body);
     final data = currentWeatherDataFromJson(result.body.toString());
-    print(data.main);
     return data;
   }
 }
@@ -30,7 +28,7 @@ getFivedayForecast({
   );
   if (result.statusCode == 200) {
     print(result.body);
-    final data = fiveDayForecastFromJSON(result.body.toString());
+    final data = hourlyForecastFromJson(result.body.toString());
     return data;
   }
 }

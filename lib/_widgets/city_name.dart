@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:weather_app/_config/layouts.dart';
 import 'package:weather_app/_config/text_styles.dart';
 
 class LocationInfo extends StatelessWidget {
@@ -15,8 +14,7 @@ class LocationInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = Colors.black.withOpacity(0.7);
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: GlobalInsets.containerPadding * 2, vertical: 3),
+    return SizedBox(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -24,10 +22,24 @@ class LocationInfo extends StatelessWidget {
               .text
               .color(textColor)
               .letterSpacing(0)
-              .size(TextSize.h5)
+              .size(TextSize.h4)
               .fontWeight(FontWeight.bold)
               .make(),
-          Text(time).text.color(textColor).letterSpacing(0).size(TextSize.h5).make(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //Text(time).text.color(textColor).letterSpacing(0).size(TextSize.b1).make(),
+              IconButton(
+                onPressed: () {},
+                splashRadius: 16,
+                icon: const Icon(
+                  Icons.location_pin,
+                  size: 24,
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

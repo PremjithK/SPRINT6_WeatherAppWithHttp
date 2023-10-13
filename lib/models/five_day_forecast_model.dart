@@ -1,20 +1,21 @@
 // To parse this JSON data, do
 //
-//     final welcome = welcomeFromJson(jsonString);
+//     final hourlyForecast = hourlyForecastFromJson(jsonString);
 
 import 'dart:convert';
 
-FivedayForecast fiveDayForecastFromJSON(String str) => FivedayForecast.fromJson(json.decode(str));
-String fiveDayForecastToJSON(FivedayForecast data) => json.encode(data.toJson());
+HourlyForecast hourlyForecastFromJson(String str) => HourlyForecast.fromJson(json.decode(str));
 
-class FivedayForecast {
+String hourlyForecastToJson(HourlyForecast data) => json.encode(data.toJson());
+
+class HourlyForecast {
   String cod;
   int message;
   int cnt;
   List<ListElement> list;
   City city;
 
-  FivedayForecast({
+  HourlyForecast({
     required this.cod,
     required this.message,
     required this.cnt,
@@ -22,7 +23,7 @@ class FivedayForecast {
     required this.city,
   });
 
-  factory FivedayForecast.fromJson(Map<String, dynamic> json) => FivedayForecast(
+  factory HourlyForecast.fromJson(Map<String, dynamic> json) => HourlyForecast(
         cod: json["cod"],
         message: json["message"],
         cnt: json["cnt"],
@@ -283,9 +284,10 @@ class Weather {
       };
 }
 
-enum Description { LIGHT_RAIN, MODERATE_RAIN, OVERCAST_CLOUDS, SCATTERED_CLOUDS }
+enum Description { BROKEN_CLOUDS, LIGHT_RAIN, MODERATE_RAIN, OVERCAST_CLOUDS, SCATTERED_CLOUDS }
 
 final descriptionValues = EnumValues({
+  "broken clouds": Description.BROKEN_CLOUDS,
   "light rain": Description.LIGHT_RAIN,
   "moderate rain": Description.MODERATE_RAIN,
   "overcast clouds": Description.OVERCAST_CLOUDS,

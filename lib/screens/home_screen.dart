@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:weather_app/_config/layouts.dart';
 import 'package:weather_app/_config/text_styles.dart';
 import 'package:weather_app/_widgets/additional_stats.dart';
 import 'package:weather_app/_widgets/city_name.dart';
@@ -67,33 +68,45 @@ class _HomeScreenState extends State<HomeScreen> {
                     temp: data.main.temp,
                     condition: data.weather[0].main,
                   ),
+                  hSpacer(6),
                   AdditionalStats(
                     windSpeed: data.wind.speed.toString(),
                     humidity: data.main.humidity.toString(),
                     maxTemp: data.main.tempMax.toString(),
                     minTemp: data.main.tempMin.toString(),
                   ).px(6),
-                  divider(),
                   hSpacer(12),
+                  Row(
+                    children: [
+                      const Text('Forecast (Next Five days)')
+                          .text
+                          .fontWeight(FontWeight.bold)
+                          .size(TextSize.h5)
+                          .make(),
+                    ],
+                  ).px(GlobalInsets.containerMargin + 3),
                   FutureBuilder(
                     future: controller.fiveDayForecast,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        final forecastData = snapshot.data as forecast.FivedayForecast;
+                        final forecastData = snapshot.data as forecast.HourlyForecast;
+
                         return SizedBox(
                           height: 200,
                           child: Expanded(
                             child: ListView.builder(
-                              itemCount: 6,
+                              itemCount: forecastData.list.length,
                               physics: const BouncingScrollPhysics(),
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 return ForecastCard(
-                                  icon: Icons.sunny,
+                                  day: forecastData.list[index].dtTxt.toString(),
+                                  condition:
+                                      forecastData.list[index].weather[0].main.name.toString(),
                                   time: DateFormat.jm().format(DateTime.fromMicrosecondsSinceEpoch(
                                       forecastData.list[index].dt.toInt() * 1000)),
-                                  temp: forecastData.list[index].main.temp.toString(),
+                                  temp: forecastData.list[index].main.temp.toInt().toString(),
                                 );
                               },
                             ),

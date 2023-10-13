@@ -1,5 +1,7 @@
-// API
-const String apiKey = '7254ca3e7df179d2ed51c410fafe2247';
+// API STRINGS
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String apiKey = dotenv.env['API_KEY'].toString();
 const String currentEndPoint =
     'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}';
 const String forecastEndpoint =
