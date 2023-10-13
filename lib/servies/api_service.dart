@@ -3,7 +3,7 @@ import 'package:weather_app/_config/strings.dart';
 import 'package:weather_app/models/current_weather_model.dart';
 import 'package:weather_app/models/five_day_forecast_model.dart';
 
-getCurrentWeather({
+Future getCurrentWeather({
   required double lattitude,
   required double longitude,
 }) async {
@@ -13,7 +13,7 @@ getCurrentWeather({
   final result = await http.get(Uri.parse(link));
   if (result.statusCode == 200) {
     print(result.body);
-    final data = curentWeatherFromJson(result.body.toString());
+    final data = currentWeatherDataFromJson(result.body.toString());
     print(data.main);
     return data;
   }

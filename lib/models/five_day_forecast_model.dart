@@ -5,7 +5,6 @@
 import 'dart:convert';
 
 FivedayForecast fiveDayForecastFromJSON(String str) => FivedayForecast.fromJson(json.decode(str));
-
 String fiveDayForecastToJSON(FivedayForecast data) => json.encode(data.toJson());
 
 class FivedayForecast {

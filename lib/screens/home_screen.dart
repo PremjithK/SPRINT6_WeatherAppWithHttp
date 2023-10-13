@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:weather_app/_config/text_styles.dart';
+import 'package:weather_app/_widgets/additional_stats.dart';
 import 'package:weather_app/_widgets/city_name.dart';
+import 'package:weather_app/_widgets/forecast_card.dart';
 import 'package:weather_app/_widgets/main_weather_container.dart';
 import 'package:weather_app/_widgets/spacer.dart';
 import 'package:weather_app/controllers/main_controller.dart';
 import 'package:weather_app/models/current_weather_model.dart';
+import 'package:weather_app/models/five_day_forecast_model.dart' as forecast;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -49,10 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               // print(snapshot.data);
-              final data = snapshot.data as CurentWeather;
+              final data = snapshot.data as CurrentWeatherData;
               print('${data.weather[0].main} : ${data.main.temp}');
 
-              return ListView(
+              return Column(
                 children: [
                   hSpacer(12),
                   LocationInfo(
@@ -62,6 +66,51 @@ class _HomeScreenState extends State<HomeScreen> {
                   MainWeatherDisplay(
                     temp: data.main.temp,
                     condition: data.weather[0].main,
+                  ),
+                  AdditionalStats(
+                    windSpeed: data.wind.speed.toString(),
+                    humidity: data.main.humidity.toString(),
+                    maxTemp: data.main.tempMax.toString(),
+                    minTemp: data.main.tempMin.toString(),
+                  ).px(6),
+                  divider(),
+                  hSpacer(12),
+                  FutureBuilder(
+                    future: controller.fiveDayForecast,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final forecastData = snapshot.data as forecast.FivedayForecast;
+                        return SizedBox(
+                          height: 200,
+                          child: Expanded(
+                            child: ListView.builder(
+                              itemCount: 6,
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return ForecastCard(
+                                  icon: Icons.sunny,
+                                  time: DateFormat.jm().format(DateTime.fromMicrosecondsSinceEpoch(
+                                      forecastData.list[index].dt.toInt() * 1000)),
+                                  temp: forecastData.list[index].main.temp.toString(),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      } else if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.deepOrange,
+                            strokeWidth: 7,
+                            strokeCap: StrokeCap.round,
+                          ),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
                   ),
                 ],
               ).px(16);

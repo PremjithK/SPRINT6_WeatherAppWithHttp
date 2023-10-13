@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final curentWeather = curentWeatherFromJson(jsonString);
+//     final currentWeatherData = currentWeatherDataFromJson(jsonString);
 
 import 'dart:convert';
 
-CurentWeather curentWeatherFromJson(String str) => CurentWeather.fromJson(json.decode(str));
+CurrentWeatherData currentWeatherDataFromJson(String str) =>
+    CurrentWeatherData.fromJson(json.decode(str));
 
-String curentWeatherToJson(CurentWeather data) => json.encode(data.toJson());
+String currentWeatherDataToJson(CurrentWeatherData data) => json.encode(data.toJson());
 
-class CurentWeather {
+class CurrentWeatherData {
   Coord coord;
   List<Weather> weather;
   String base;
   Main main;
   int visibility;
   Wind wind;
-  Rain rain;
   Clouds clouds;
   int dt;
   Sys sys;
@@ -24,14 +24,13 @@ class CurentWeather {
   String name;
   int cod;
 
-  CurentWeather({
+  CurrentWeatherData({
     required this.coord,
     required this.weather,
     required this.base,
     required this.main,
     required this.visibility,
     required this.wind,
-    required this.rain,
     required this.clouds,
     required this.dt,
     required this.sys,
@@ -41,14 +40,13 @@ class CurentWeather {
     required this.cod,
   });
 
-  factory CurentWeather.fromJson(Map<String, dynamic> json) => CurentWeather(
+  factory CurrentWeatherData.fromJson(Map<String, dynamic> json) => CurrentWeatherData(
         coord: Coord.fromJson(json["coord"]),
         weather: List<Weather>.from(json["weather"].map((x) => Weather.fromJson(x))),
         base: json["base"],
         main: Main.fromJson(json["main"]),
         visibility: json["visibility"],
         wind: Wind.fromJson(json["wind"]),
-        rain: Rain.fromJson(json["rain"]),
         clouds: Clouds.fromJson(json["clouds"]),
         dt: json["dt"],
         sys: Sys.fromJson(json["sys"]),
@@ -65,7 +63,6 @@ class CurentWeather {
         "main": main.toJson(),
         "visibility": visibility,
         "wind": wind.toJson(),
-        "rain": rain.toJson(),
         "clouds": clouds.toJson(),
         "dt": dt,
         "sys": sys.toJson(),
@@ -153,22 +150,6 @@ class Main {
         "humidity": humidity,
         "sea_level": seaLevel,
         "grnd_level": grndLevel,
-      };
-}
-
-class Rain {
-  double the1H;
-
-  Rain({
-    required this.the1H,
-  });
-
-  factory Rain.fromJson(Map<String, dynamic> json) => Rain(
-        the1H: json["1h"]?.toDouble(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "1h": the1H,
       };
 }
 

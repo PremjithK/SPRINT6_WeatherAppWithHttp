@@ -34,7 +34,7 @@ class _MainWeatherDisplayState extends State<MainWeatherDisplay> {
         break;
       case 'Clouds':
         // weatherIcon = Icons.water_drop;
-        weatherIcon = FontAwesomeIcons.cloudscale;
+        weatherIcon = FontAwesomeIcons.cloudSun;
         break;
 
       default:
