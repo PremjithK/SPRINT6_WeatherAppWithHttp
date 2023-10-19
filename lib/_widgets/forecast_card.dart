@@ -46,7 +46,7 @@ class ForecastCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('$day')
+          Text(day)
               .text
               .align(TextAlign.center)
               .color(Colors.deepOrange)

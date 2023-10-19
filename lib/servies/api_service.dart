@@ -10,25 +10,26 @@ Future getCurrentWeather({
   final link =
       'https://api.openweathermap.org/data/2.5/weather?lat=$lattitude&lon=$longitude&appid=$apiKey&units=metric';
 
-  final result = await http.get(Uri.parse(link));
+  final result = await http.post(Uri.parse(link));
   if (result.statusCode == 200) {
     final data = currentWeatherDataFromJson(result.body.toString());
+
     return data;
-  }
+  } else if (result.statusCode == 400) print('Error');
 }
 
 //5 day forecast
-getFivedayForecast({
+Future getFivedayForecast({
   required double lattitude,
   required double longitude,
 }) async {
-  final result = await http.get(
-    Uri.parse(
-        'https://api.openweathermap.org/data/2.5/forecast?lat=$lattitude&lon=$longitude&appid=$apiKey&units=metric'),
-  );
+  final link =
+      'https://api.openweathermap.org/data/2.5/weather?lat=$lattitude&lon=$longitude&appid=$apiKey&units=metric';
+
+  final result = await http.get(Uri.parse(link));
   if (result.statusCode == 200) {
-    print(result.body);
-    final data = hourlyForecastFromJson(result.body.toString());
+    final data = fivedayForecastDataFromJson(result.body.toString());
+    print(data);
     return data;
   }
 }

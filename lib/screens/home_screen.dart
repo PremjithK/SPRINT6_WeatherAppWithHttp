@@ -10,7 +10,7 @@ import 'package:weather_app/_widgets/forecast_card.dart';
 import 'package:weather_app/_widgets/main_weather_container.dart';
 import 'package:weather_app/_widgets/spacer.dart';
 import 'package:weather_app/controllers/main_controller.dart';
-import 'package:weather_app/models/current_weather_model.dart';
+import 'package:weather_app/models/current_weather_model.dart' as current_weather;
 import 'package:weather_app/models/five_day_forecast_model.dart' as forecast;
 
 class HomeScreen extends StatefulWidget {
@@ -54,79 +54,80 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               // print(snapshot.data);
-              final data = snapshot.data as CurrentWeatherData;
-              print('${data.weather[0].main} : ${data.main.temp}');
+              final data = snapshot.data as current_weather.CurrentWeatherData;
 
-              return Column(
-                children: [
-                  hSpacer(12),
-                  LocationInfo(
-                    locationName: data.name,
-                    time: '${DateTime.now().hour}:${DateTime.now().minute} ',
-                  ),
-                  MainWeatherDisplay(
-                    temp: data.main.temp,
-                    condition: data.weather[0].main,
-                  ),
-                  hSpacer(6),
-                  AdditionalStats(
-                    windSpeed: data.wind.speed.toString(),
-                    humidity: data.main.humidity.toString(),
-                    maxTemp: data.main.tempMax.toString(),
-                    minTemp: data.main.tempMin.toString(),
-                  ).px(6),
-                  hSpacer(12),
-                  Row(
-                    children: [
-                      const Text('Forecast (Next Five days)')
-                          .text
-                          .fontWeight(FontWeight.bold)
-                          .size(TextSize.h5)
-                          .make(),
-                    ],
-                  ).px(GlobalInsets.containerMargin + 3),
-                  FutureBuilder(
-                    future: controller.fiveDayForecast,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final forecastData = snapshot.data as forecast.HourlyForecast;
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    hSpacer(12),
+                    LocationInfo(
+                      locationName: data.name,
+                      time: '${DateTime.now().hour}:${DateTime.now().minute} ',
+                    ),
+                    MainWeatherDisplay(
+                      temp: data.main.temp,
+                      condition: data.weather[0].main,
+                    ),
+                    hSpacer(6),
+                    AdditionalStats(
+                      windSpeed: data.wind.speed.toString(),
+                      humidity: data.main.humidity.toString(),
+                      maxTemp: data.main.tempMax.toString(),
+                      minTemp: data.main.tempMin.toString(),
+                    ).px(6),
+                    hSpacer(12),
+                    Row(
+                      children: [
+                        const Text('Forecast 5d')
+                            .text
+                            .fontWeight(FontWeight.bold)
+                            .size(TextSize.h5)
+                            .make(),
+                      ],
+                    ).px(GlobalInsets.containerMargin + 3),
 
-                        return SizedBox(
-                          height: 200,
-                          child: Expanded(
+                    //? Inner future builder
+                    FutureBuilder(
+                      future: controller.fiveDayForecast,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final forecastData = snapshot.data as forecast.FivedayForecastData;
+                          print(forecastData.list);
+
+                          return SizedBox(
+                            height: 250,
                             child: ListView.builder(
                               itemCount: forecastData.list.length,
                               physics: const BouncingScrollPhysics(),
-                              shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 return ForecastCard(
                                   day: forecastData.list[index].dtTxt.toString(),
-                                  condition:
-                                      forecastData.list[index].weather[0].main.name.toString(),
+                                  condition: forecastData.list[index].weather[0].main.toString(),
                                   time: DateFormat.jm().format(DateTime.fromMicrosecondsSinceEpoch(
                                       forecastData.list[index].dt.toInt() * 1000)),
                                   temp: forecastData.list[index].main.temp.toInt().toString(),
                                 );
                               },
                             ),
-                          ),
-                        );
-                      } else if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.deepOrange,
-                            strokeWidth: 7,
-                            strokeCap: StrokeCap.round,
-                          ),
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
-                ],
-              ).px(16);
+                          );
+                        } else if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.deepOrange,
+                              strokeWidth: 7,
+                              strokeCap: StrokeCap.round,
+                            ),
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    ),
+                    //? End of Inner FutureBuilder
+                  ],
+                ).px(16),
+              );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(

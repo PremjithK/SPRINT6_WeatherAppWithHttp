@@ -1,21 +1,22 @@
 // To parse this JSON data, do
 //
-//     final hourlyForecast = hourlyForecastFromJson(jsonString);
+//     final fivedayForecastData = fivedayForecastDataFromJson(jsonString);
 
 import 'dart:convert';
 
-HourlyForecast hourlyForecastFromJson(String str) => HourlyForecast.fromJson(json.decode(str));
+FivedayForecastData fivedayForecastDataFromJson(String str) =>
+    FivedayForecastData.fromJson(json.decode(str));
 
-String hourlyForecastToJson(HourlyForecast data) => json.encode(data.toJson());
+String fivedayForecastDataToJson(FivedayForecastData data) => json.encode(data.toJson());
 
-class HourlyForecast {
+class FivedayForecastData {
   String cod;
   int message;
   int cnt;
   List<ListElement> list;
   City city;
 
-  HourlyForecast({
+  FivedayForecastData({
     required this.cod,
     required this.message,
     required this.cnt,
@@ -23,13 +24,27 @@ class HourlyForecast {
     required this.city,
   });
 
-  factory HourlyForecast.fromJson(Map<String, dynamic> json) => HourlyForecast(
-        cod: json["cod"],
-        message: json["message"],
-        cnt: json["cnt"],
-        list: List<ListElement>.from(json["list"].map((x) => ListElement.fromJson(x))),
-        city: City.fromJson(json["city"]),
-      );
+  factory FivedayForecastData.fromJson(Map<String, dynamic> json) => FivedayForecastData(
+      cod: json["cod"].toString(),
+      message: json["message"] ?? 0,
+      cnt: json["cnt"] ?? 0,
+      list: (json["list"] as List<dynamic>?)
+              ?.map((x) => ListElement.fromJson(x as Map<String, dynamic>))
+              .toList() ??
+          [],
+      // list: List<ListElement>.from(json["list"].map((x) => ListElement.fromJson(x))),
+      // city: City.fromJson(json["city"]),
+      city: json["city"] != null
+          ? City.fromJson(json["city"])
+          : City(
+              id: 0,
+              name: "",
+              coord: Coord(lat: 0.0, lon: 0.0),
+              country: "",
+              population: 0,
+              timezone: 0,
+              sunrise: 0,
+              sunset: 0));
 
   Map<String, dynamic> toJson() => {
         "cod": cod,
@@ -284,25 +299,19 @@ class Weather {
       };
 }
 
-enum Description { BROKEN_CLOUDS, LIGHT_RAIN, MODERATE_RAIN, OVERCAST_CLOUDS, SCATTERED_CLOUDS }
+enum Description { BROKEN_CLOUDS, LIGHT_RAIN, MODERATE_RAIN, SCATTERED_CLOUDS }
 
 final descriptionValues = EnumValues({
   "broken clouds": Description.BROKEN_CLOUDS,
   "light rain": Description.LIGHT_RAIN,
   "moderate rain": Description.MODERATE_RAIN,
-  "overcast clouds": Description.OVERCAST_CLOUDS,
   "scattered clouds": Description.SCATTERED_CLOUDS
 });
 
-enum Icon { THE_03_D, THE_04_D, THE_04_N, THE_10_D, THE_10_N }
+enum Icon { THE_03_D, THE_04_D, THE_10_D, THE_10_N }
 
-final iconValues = EnumValues({
-  "03d": Icon.THE_03_D,
-  "04d": Icon.THE_04_D,
-  "04n": Icon.THE_04_N,
-  "10d": Icon.THE_10_D,
-  "10n": Icon.THE_10_N
-});
+final iconValues = EnumValues(
+    {"03d": Icon.THE_03_D, "04d": Icon.THE_04_D, "10d": Icon.THE_10_D, "10n": Icon.THE_10_N});
 
 enum MainEnum { CLOUDS, RAIN }
 
