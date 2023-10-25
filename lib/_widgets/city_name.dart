@@ -12,17 +12,15 @@ class LocationInfo extends StatelessWidget {
   final String time;
   @override
   Widget build(BuildContext context) {
-    final textColor = Colors.black.withOpacity(0.7);
-
     return SizedBox(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(locationName)
               .text
-              .color(textColor)
               .letterSpacing(0)
               .size(TextSize.h4)
+              .letterSpacing(-1)
               .fontWeight(FontWeight.bold)
               .make(),
           Row(

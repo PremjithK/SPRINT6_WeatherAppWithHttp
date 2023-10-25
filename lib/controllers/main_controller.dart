@@ -31,9 +31,8 @@ class MainController extends GetxController {
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best).then((loc) {
       lattitude.value = loc.latitude;
       longitude.value = loc.longitude;
-      isLoaded.value = true;
 
-      //Printing
+      //Printing Coordinates
       print(loc.latitude);
       print(loc.longitude);
     });
@@ -50,7 +49,8 @@ class MainController extends GetxController {
         fiveDayForecast =
             getFivedayForecast(lattitude: lattitude.value, longitude: longitude.value);
       },
-    );
-    isLoaded.value = true;
+    ).then((value) {
+      isLoaded.value = true;
+    });
   }
 }
