@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (snapshot.hasData) {
                     // print(snapshot.data);
                     final data = snapshot.data as current_weather.CurrentWeatherData;
-
+                    print(data.weather[0].main.toUpperCase());
                     return SingleChildScrollView(
                       child: Column(
                         children: [
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           MainWeatherDisplay(
                             temp: data.main.temp,
-                            condition: data.weather[0].main,
+                            condition: data.weather[0].main.capitalized,
                           ),
                           hSpacer(6),
                           AdditionalStats(

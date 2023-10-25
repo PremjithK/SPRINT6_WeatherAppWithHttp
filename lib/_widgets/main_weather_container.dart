@@ -36,6 +36,10 @@ class _MainWeatherDisplayState extends State<MainWeatherDisplay> {
         // weatherIcon = Icons.water_drop;
         weatherIcon = FontAwesomeIcons.cloudSun;
         break;
+      case 'Clear':
+        // weatherIcon = Icons.water_drop;
+        weatherIcon = Icons.wb_sunny;
+        break;
 
       default:
         weatherIcon = Icons.error;
