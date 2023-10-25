@@ -9,6 +9,8 @@ class MainController extends GetxController {
   var lattitude = 0.0.obs;
   var longitude = 0.0.obs;
 
+  var isLoaded = false.obs;
+
   Future<void> getUserLocation() async {
     LocationPermission userPermission = LocationPermission.denied;
     bool isLocationEnabled = false;
@@ -29,20 +31,26 @@ class MainController extends GetxController {
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best).then((loc) {
       lattitude.value = loc.latitude;
       longitude.value = loc.longitude;
+      isLoaded.value = true;
 
+      //Printing
       print(loc.latitude);
       print(loc.longitude);
     });
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
 
-    getUserLocation().then((value) {
-      currentWeatherData =
-          getCurrentWeather(lattitude: lattitude.value, longitude: longitude.value);
-      fiveDayForecast = getFivedayForecast(lattitude: lattitude.value, longitude: longitude.value);
-    });
+    await getUserLocation().then(
+      (value) {
+        currentWeatherData =
+            getCurrentWeather(lattitude: lattitude.value, longitude: longitude.value);
+        fiveDayForecast =
+            getFivedayForecast(lattitude: lattitude.value, longitude: longitude.value);
+      },
+    );
+    isLoaded.value = true;
   }
 }

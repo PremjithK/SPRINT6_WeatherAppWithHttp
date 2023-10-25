@@ -1,13 +1,13 @@
 // To parse this JSON data, do
 //
-//     final fivedayForecastData = fivedayForecastDataFromJson(jsonString);
+//     final fivedayForecast = fivedayForecastFromJson(jsonString);
 
 import 'dart:convert';
 
-FivedayForecastData fivedayForecastDataFromJson(String str) =>
+FivedayForecastData fivedayForecastFromJson(String str) =>
     FivedayForecastData.fromJson(json.decode(str));
 
-String fivedayForecastDataToJson(FivedayForecastData data) => json.encode(data.toJson());
+String fivedayForecastToJson(FivedayForecastData data) => json.encode(data.toJson());
 
 class FivedayForecastData {
   String cod;
@@ -25,26 +25,12 @@ class FivedayForecastData {
   });
 
   factory FivedayForecastData.fromJson(Map<String, dynamic> json) => FivedayForecastData(
-      cod: json["cod"].toString(),
-      message: json["message"] ?? 0,
-      cnt: json["cnt"] ?? 0,
-      list: (json["list"] as List<dynamic>?)
-              ?.map((x) => ListElement.fromJson(x as Map<String, dynamic>))
-              .toList() ??
-          [],
-      // list: List<ListElement>.from(json["list"].map((x) => ListElement.fromJson(x))),
-      // city: City.fromJson(json["city"]),
-      city: json["city"] != null
-          ? City.fromJson(json["city"])
-          : City(
-              id: 0,
-              name: "",
-              coord: Coord(lat: 0.0, lon: 0.0),
-              country: "",
-              population: 0,
-              timezone: 0,
-              sunrise: 0,
-              sunset: 0));
+        cod: json["cod"].toString(),
+        message: json["message"],
+        cnt: json["cnt"],
+        list: List<ListElement>.from(json["list"].map((x) => ListElement.fromJson(x))),
+        city: City.fromJson(json["city"]),
+      );
 
   Map<String, dynamic> toJson() => {
         "cod": cod,
@@ -127,9 +113,9 @@ class ListElement {
   Wind wind;
   int visibility;
   double pop;
-  Rain? rain;
   Sys sys;
   DateTime dtTxt;
+  Rain? rain;
 
   ListElement({
     required this.dt,
@@ -139,9 +125,9 @@ class ListElement {
     required this.wind,
     required this.visibility,
     required this.pop,
-    this.rain,
     required this.sys,
     required this.dtTxt,
+    this.rain,
   });
 
   factory ListElement.fromJson(Map<String, dynamic> json) => ListElement(
@@ -152,9 +138,9 @@ class ListElement {
         wind: Wind.fromJson(json["wind"]),
         visibility: json["visibility"],
         pop: json["pop"]?.toDouble(),
-        rain: json["rain"] == null ? null : Rain.fromJson(json["rain"]),
         sys: Sys.fromJson(json["sys"]),
         dtTxt: DateTime.parse(json["dt_txt"]),
+        rain: json["rain"] == null ? null : Rain.fromJson(json["rain"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -165,9 +151,9 @@ class ListElement {
         "wind": wind.toJson(),
         "visibility": visibility,
         "pop": pop,
-        "rain": rain?.toJson(),
         "sys": sys.toJson(),
         "dt_txt": dtTxt.toIso8601String(),
+        "rain": rain?.toJson(),
       };
 }
 
@@ -274,8 +260,8 @@ final podValues = EnumValues({"d": Pod.D, "n": Pod.N});
 class Weather {
   int id;
   MainEnum main;
-  Description description;
-  Icon icon;
+  String description;
+  String icon;
 
   Weather({
     required this.id,
@@ -287,35 +273,22 @@ class Weather {
   factory Weather.fromJson(Map<String, dynamic> json) => Weather(
         id: json["id"],
         main: mainEnumValues.map[json["main"]]!,
-        description: descriptionValues.map[json["description"]]!,
-        icon: iconValues.map[json["icon"]]!,
+        description: json["description"],
+        icon: json["icon"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "main": mainEnumValues.reverse[main],
-        "description": descriptionValues.reverse[description],
-        "icon": iconValues.reverse[icon],
+        "description": description,
+        "icon": icon,
       };
 }
 
-enum Description { BROKEN_CLOUDS, LIGHT_RAIN, MODERATE_RAIN, SCATTERED_CLOUDS }
+enum MainEnum { CLEAR, CLOUDS, RAIN }
 
-final descriptionValues = EnumValues({
-  "broken clouds": Description.BROKEN_CLOUDS,
-  "light rain": Description.LIGHT_RAIN,
-  "moderate rain": Description.MODERATE_RAIN,
-  "scattered clouds": Description.SCATTERED_CLOUDS
-});
-
-enum Icon { THE_03_D, THE_04_D, THE_10_D, THE_10_N }
-
-final iconValues = EnumValues(
-    {"03d": Icon.THE_03_D, "04d": Icon.THE_04_D, "10d": Icon.THE_10_D, "10n": Icon.THE_10_N});
-
-enum MainEnum { CLOUDS, RAIN }
-
-final mainEnumValues = EnumValues({"Clouds": MainEnum.CLOUDS, "Rain": MainEnum.RAIN});
+final mainEnumValues =
+    EnumValues({"Clear": MainEnum.CLEAR, "Clouds": MainEnum.CLOUDS, "Rain": MainEnum.RAIN});
 
 class Wind {
   double speed;

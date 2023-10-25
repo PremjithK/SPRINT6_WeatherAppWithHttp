@@ -31,6 +31,9 @@ class ForecastCard extends StatelessWidget {
       case 'SUNNY':
         icon = Icons.wb_sunny;
         break;
+      case 'CLEAR':
+        icon = Icons.wb_sunny;
+        break;
       default:
         icon = Icons.error;
         break;

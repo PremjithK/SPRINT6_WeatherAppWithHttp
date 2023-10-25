@@ -24,12 +24,14 @@ Future getFivedayForecast({
   required double longitude,
 }) async {
   final link =
-      'https://api.openweathermap.org/data/2.5/weather?lat=$lattitude&lon=$longitude&appid=$apiKey&units=metric';
+      'https://api.openweathermap.org/data/2.5/forecast?lat=$lattitude&lon=$longitude&appid=$apiKey&units=metric';
 
   final result = await http.get(Uri.parse(link));
   if (result.statusCode == 200) {
-    final data = fivedayForecastDataFromJson(result.body.toString());
-    print(data);
+    print(''' 
+    ${result.body}
+    ''');
+    final data = fivedayForecastFromJson(result.body.toString());
     return data;
   }
 }

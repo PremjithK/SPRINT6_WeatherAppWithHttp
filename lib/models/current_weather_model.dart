@@ -10,9 +10,7 @@ CurrentWeatherData currentWeatherDataFromJson(String str) =>
 String currentWeatherDataToJson(CurrentWeatherData data) => json.encode(data.toJson());
 
 class CurrentWeatherData {
-  Coord coord;
   List<Weather> weather;
-  String base;
   Main main;
   int visibility;
   Wind wind;
@@ -24,9 +22,7 @@ class CurrentWeatherData {
   int cod;
 
   CurrentWeatherData({
-    required this.coord,
     required this.weather,
-    required this.base,
     required this.main,
     required this.visibility,
     required this.wind,
@@ -39,9 +35,7 @@ class CurrentWeatherData {
   });
 
   factory CurrentWeatherData.fromJson(Map<String, dynamic> json) => CurrentWeatherData(
-        coord: Coord.fromJson(json["coord"]),
         weather: List<Weather>.from(json["weather"].map((x) => Weather.fromJson(x))),
-        base: json["base"],
         main: Main.fromJson(json["main"]),
         visibility: json["visibility"],
         wind: Wind.fromJson(json["wind"]),
@@ -54,9 +48,7 @@ class CurrentWeatherData {
       );
 
   Map<String, dynamic> toJson() => {
-        "coord": coord.toJson(),
         "weather": List<dynamic>.from(weather.map((x) => x.toJson())),
-        "base": base,
         "main": main.toJson(),
         "visibility": visibility,
         "wind": wind.toJson(),
@@ -82,26 +74,6 @@ class Clouds {
 
   Map<String, dynamic> toJson() => {
         "all": all,
-      };
-}
-
-class Coord {
-  double lon;
-  double lat;
-
-  Coord({
-    required this.lon,
-    required this.lat,
-  });
-
-  factory Coord.fromJson(Map<String, dynamic> json) => Coord(
-        lon: json["lon"]?.toDouble(),
-        lat: json["lat"]?.toDouble(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "lon": lon,
-        "lat": lat,
       };
 }
 
